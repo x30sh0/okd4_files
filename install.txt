@@ -1,0 +1,42 @@
+wget https://github.com/openshift/okd/releases/download/4.4.0-0.okd-2020-05-23-055148-beta5/openshift-client-linux-4.4.0-0.okd-2020-05-23-055148-beta5.tar.gz
+
+
+wget https://github.com/openshift/okd/releases/download/4.4.0-0.okd-2020-05-23-055148-beta5/openshift-install-linux-4.4.0-0.okd-2020-05-23-055148-beta5.tar.gz
+
+curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+
+tar -zxvf openshift-client-linux
+tar -zxvf openshift-install-linux
+
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+
+ssh-keygen
+
+cd
+mkdir install_dir
+cp okd4_files/install-config.yaml ./install_dir
+
+openshift-install create manifests --dir=install_dir/
+
+sed -i 's/mastersSchedulable: true/mastersSchedulable: False/' install_dir/manifests/cluster-scheduler-02-config.yml
+
+openshift-install create ignition-configs --dir=install_dir/
+
+mkdir /var/www/html/okd4
+
+sudo cp -R install_dir/* /var/www/html/okd4/
+sudo chown -R apache: /var/www/html/
+sudo chmod -R 755 /var/www/html/
+
+
+wget https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/32.20200715.3.0/x86_64/fedora-coreos-32.20200715.3.0-metal.x86_64.raw.xz
+sudo wget https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/32.20200715.3.0/x86_64/fedora-coreos-32.20200715.3.0-metal.x86_64.raw.xz.sig
+sudo mv fedora-coreos-32.20200715.3.0-metal.x86_64.raw.xz fcos.raw.xz
+sudo mv fedora-coreos-32.20200715.3.0-metal.x86_64.raw.xz.sig fcos.raw.xz.sig
+sudo chown -R apache: /var/www/html/
+sudo chmod -R 755 /var/www/html/
+
+coreos.inst.install_dev=/dev/sda 
+coreos.inst.image_url=http://10.67.51.13:8080/okd4/fcos.raw.xz 
+coreos.inst.ignition_url=http://10.67.51.13:8080/okd4/bootstrap.ign
