@@ -4,7 +4,7 @@ baseDomain: bankspb.ru
 proxy:
   httpProxy: http://tiger.bspb.ru:8080
   httpsProxy: http://tiger.bspb.ru:8080
-  noProxy: .bspb.ru
+  noProxy: .bankspb.ru,10.67.51.0/24
 
 metadata:
   name: okd
