@@ -2,8 +2,8 @@ apiVersion: v1
 baseDomain: bankspb.ru
 
 proxy:
-  httpProxy: http://tiger.bsbp.ru:8080
-  httpsProxy: http://tiger.bsbp.ru:8080
+  httpProxy: http://tiger.bspb.ru:8080
+  httpsProxy: http://tiger.bspb.ru:8080
   noProxy: .bspb.ru
 
 metadata:
